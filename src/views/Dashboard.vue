@@ -20,12 +20,19 @@
       </v-col>
     </v-row>
 
-    <v-row>
+    <v-row id="below-the-fold" v-intersect="showMoreContent">
       <v-col cols="12" lg="8" md="8">
         <EmployeesTable :employees="employees" @select-employee="setEmployee" />
       </v-col>
       <v-col cols="12" lg="4" md="4">
         <EventTimeline :timeline="timeline" />
+      </v-col>
+    </v-row>
+
+    <v-row v-if="loadNewContent" id="more-content">
+      <v-col>
+        <v-skeleton-loader ref="skelton" type="table" class="mx-auto">
+        </v-skeleton-loader>
       </v-col>
     </v-row>
 
@@ -61,6 +68,7 @@
     data() {
       return {
         employees: employeesData,
+        loadNewContent: false,
         sales: salesData,
         selectedEmployee: {
           name: '',
@@ -76,6 +84,9 @@
         this.snackbar = true
         this.selectedEmployee.name = event.name
         this.selectedEmployee.title = event.title
+      },
+      showMoreContent(entries) {
+        this.loadNewContent = entries[0].isIntersecting
       },
     },
   }
